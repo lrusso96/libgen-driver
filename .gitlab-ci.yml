@@ -6,19 +6,19 @@ stages:
 
 cache:
   paths:
-    - .m2/repository/
     - target/
 
 build:
   stage: build
   script:
-    - mvn $MAVEN_CLI_OPTS compile
+    - mvn compile
 
 test:
   stage: test
   script:
-  - mvn $MAVEN_CLI_OPTS test
+  - mvn verify
   artifacts:
     reports:
       junit:
         - target/surefire-reports/TEST-*.xml
+        - target/failsafe-reports/TEST-*.xml
