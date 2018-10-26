@@ -8,6 +8,7 @@ cache:
     - target/
 
 install:
+  stage: install
   script:
     - mvn install -B
     - cat target/site/jacoco/index.html
