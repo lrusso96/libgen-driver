@@ -22,7 +22,8 @@ public class LibgenTest
     @Test
     public void testNoMirrorException() throws NoMirrorAvailableException, MalformedURLException {
         thrown.expect(NoMirrorAvailableException.class);
-        new Libgen(new Mirror("http://libgen.io"), true);
+        //should be down!
+        new Libgen(new Mirror("http://libgen.org"), true);
     }
 
     @Test
