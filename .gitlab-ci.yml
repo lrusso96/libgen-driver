@@ -1,6 +1,14 @@
 image: kaiwinter/docker-java8-maven
 
-job1:
+stages:
+  - install
+  
+cache:
+  paths:
+    - target/
+
+install:
   script:
     - mvn install -B
     - cat target/site/jacoco/index.html
+
