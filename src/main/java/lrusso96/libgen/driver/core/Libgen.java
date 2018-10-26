@@ -5,6 +5,7 @@ import lrusso96.libgen.driver.exceptions.NoBookFoundException;
 import lrusso96.libgen.driver.exceptions.NoMirrorAvailableException;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -110,16 +111,16 @@ public class Libgen {
                 book.setAuthor(bookObject.getString("author"));
                 book.setTitle(bookObject.getString("title"));
                 book.setMD5(bookObject.getString("md5"));
-                Object o = bookObject.get("year");
-                if (o instanceof Integer)
-                    book.setYear((int) o);
-                o = bookObject.get("pages");
-                if(o instanceof Integer)
-                    book.setPages((int) o);
+                String o = bookObject.getString("year");
+                if (NumberUtils.isParsable(o))
+                    book.setYear(Integer.parseInt(o));
+                o = bookObject.getString("pages");
+                if (NumberUtils.isParsable(o))
+                    book.setPages(Integer.parseInt(o));
                 book.setLanguage(bookObject.getString("language"));
-                o = bookObject.get("filesize");
-                if(o instanceof Integer)
-                    book.setFilesize((int) o);
+                o = bookObject.getString("filesize");
+                if (NumberUtils.isParsable(o))
+                    book.setFilesize(Integer.parseInt(o));
                 book.setExtension(bookObject.getString("extension"));
                 list.add(book);
             }

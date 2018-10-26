@@ -67,11 +67,7 @@ public class Book {
         this.language = language;
     }
 
-    public int getFilesize() {
-        return filesize;
-    }
-
-    public String humanReadableFilesize() {
+    public String getReadableFilesize() {
         int unit = 1000;
         if (filesize < unit) return filesize + " B";
         int exp = (int) (Math.log(filesize) / Math.log(unit));
@@ -102,7 +98,7 @@ public class Book {
                 ", year=" + year +
                 ", pages=" + pages +
                 ", language='" + language + '\'' +
-                ", filesize=" + humanReadableFilesize() +
+                ", filesize=" + getReadableFilesize() +
                 ", extension='" + extension + '\'' +
                 '}';
     }

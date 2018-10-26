@@ -42,11 +42,21 @@ public class LibgenTest
 
     @Test
     public void testBook() throws NoMirrorAvailableException, NoBookFoundException, LibgenException {
-        String book_title = "Promessi sposi";
+        String book_title = "promessi sposi";
         Libgen libgen = new Libgen();
         List<Book> books = libgen.search(book_title);
         books.removeIf(book -> !book.getAuthor().toLowerCase().contains("manzoni"));
         assertFalse(books.isEmpty());
+        Book book = books.get(0);
+        assertTrue(book.toString().toLowerCase().contains(book_title));
+        assertFalse(book.getAuthor().isEmpty());
+        assertNotEquals(0, book.getId());
+        assertFalse(book.getMD5().isEmpty());
+        assertFalse(book.getLanguage().isEmpty());
+        assertFalse(book.getReadableFilesize().isEmpty());
+        assertNotEquals(0, book.getPages());
+        assertNotEquals(0, book.getYear());
+        assertFalse(book.getExtension().isEmpty());
     }
 
     @Test
