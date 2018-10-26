@@ -1,27 +1,24 @@
 image: maven:latest
 
+stages:
+  - build
+  - test
+
 cache:
   paths:
-    - maven.repository/
+    - target/
 
-variables:
-  MAVEN_OPTS: "--batch-mode -Dmaven.repo.local=maven.repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN"
-
-buildAndTest:
+build:
+  stage: build
   script:
-    - mvn verify
-    # Print "Jacoco-Test-Coverage:xy.z%"
-    - cat target/site/jacoco/index.html | grep -o 'Total[^%]*%' | sed -e 's/Total/Jacoco-Test-Coverage:/g'
-  artifacts:
-    paths:
-      - ./.jar
+    - mvn compile
 
-deployAndMove:
+test:
+  stage: test
   script:
-    - mvn deploy
-    - mv target/*.jar .
+  - mvn verify
   artifacts:
-    paths:
-      - ./.jar
-  only:
-    - tags
+    reports:
+      junit:
+        - target/surefire-reports/TEST-*.xml
+        - target/failsafe-reports/TEST-*.xml
