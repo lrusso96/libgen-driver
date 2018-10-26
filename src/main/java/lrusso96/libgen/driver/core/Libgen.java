@@ -22,10 +22,9 @@ import java.util.concurrent.TimeUnit;
 
 public class Libgen {
     private Mirror mirror;
-    private List<Mirror> mirrors;
+    private List<Mirror> mirrors = new LinkedList<>();;
 
     private void initMirrors() {
-        mirrors = new LinkedList<>();
         try {
             mirrors.add(new Mirror("http://libgen.is"));
         } catch (MalformedURLException ignored) {
@@ -37,8 +36,9 @@ public class Libgen {
         this.mirror = MirrorHelper.getFirstReachable(mirrors);
     }
 
-    public Libgen(Mirror mirror) throws NoMirrorAvailableException {
-        initMirrors();
+    public Libgen(Mirror mirror, boolean unique) throws NoMirrorAvailableException {
+        if(!unique)
+            initMirrors();
         mirrors.add(mirror);
         this.mirror = MirrorHelper.getFirstReachable(mirrors);
     }
@@ -79,7 +79,7 @@ public class Libgen {
 
     private List<Book> search(List<String> ids) throws LibgenException, NoBookFoundException{
         if(ids.isEmpty())
-                throw new NoBookFoundException();
+                throw new NoBookFoundException("Try a new query");
         List<Book> list = new ArrayList<>();
         StringBuilder ids_comma = new StringBuilder();
         for(String id : ids)

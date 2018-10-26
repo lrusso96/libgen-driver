@@ -15,7 +15,7 @@ public class Book {
         return id;
     }
 
-    public void setId(int id) {
+    void setId(int id) {
         this.id = id;
     }
 
@@ -23,7 +23,7 @@ public class Book {
         return author;
     }
 
-    public void setAuthor(String author) {
+    void setAuthor(String author) {
         this.author = author;
     }
 
@@ -31,7 +31,7 @@ public class Book {
         return title;
     }
 
-    public void setTitle(String title) {
+    void setTitle(String title) {
         this.title = title;
     }
 
@@ -39,7 +39,7 @@ public class Book {
         return MD5;
     }
 
-    public void setMD5(String MD5) {
+    void setMD5(String MD5) {
         this.MD5 = MD5;
     }
 
@@ -47,7 +47,7 @@ public class Book {
         return year;
     }
 
-    public void setYear(int year) {
+    void setYear(int year) {
         this.year = year;
     }
 
@@ -55,7 +55,7 @@ public class Book {
         return pages;
     }
 
-    public void setPages(int pages) {
+    void setPages(int pages) {
         this.pages = pages;
     }
 
@@ -63,7 +63,7 @@ public class Book {
         return language;
     }
 
-    public void setLanguage(String language) {
+    void setLanguage(String language) {
         this.language = language;
     }
 
@@ -80,7 +80,7 @@ public class Book {
     }
 
 
-    public void setFilesize(int filesize) {
+    void setFilesize(int filesize) {
         this.filesize = filesize;
     }
 
@@ -88,7 +88,7 @@ public class Book {
         return extension;
     }
 
-    public void setExtension(String extension) {
+    void setExtension(String extension) {
         this.extension = extension;
     }
 
