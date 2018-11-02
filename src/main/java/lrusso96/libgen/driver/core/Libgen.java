@@ -23,7 +23,9 @@ import java.util.concurrent.TimeUnit;
 
 public class Libgen {
     private Mirror mirror;
-    private List<Mirror> mirrors = new LinkedList<>();;
+    private List<Mirror> mirrors = new LinkedList<>();
+    public static final int DEFAULT_RESULTS_NUMBER = 25;
+    private int maxResultsNumber = DEFAULT_RESULTS_NUMBER;
 
     private void initMirrors() {
         try {
@@ -59,12 +61,32 @@ public class Libgen {
         throw new NoMirrorAvailableException("Error occurred");
     }
 
+
     private List<String> getIds(String stuff, String column) throws LibgenException {
+        int page = 1;
+        //reduce number of pages requested!
+        int results = maxResultsNumber <=25? 25: maxResultsNumber <=50? 50 : 100;
+        List<String> ids = getIds(stuff, column, page, results);
+        while(ids.size() < maxResultsNumber){
+            page++;
+            List<String> new_ids = getIds(stuff, column, page, results);
+            if(new_ids.isEmpty())
+                break;
+            ids.addAll(new_ids);
+        }
+        if(maxResultsNumber < ids.size())
+            return ids.subList(0, maxResultsNumber);
+        return ids;
+    }
+
+    private List<String> getIds(String stuff, String column, int page, int results) throws LibgenException {
         try {
             List<String> list = new ArrayList<>();
             Document doc = Jsoup.connect(mirror.getUrl() + "/search.php")
                     .data("req", stuff)
                     .data("column", column)
+                    .data("res", results + "")
+                    .data("page", page + "")
                     .get();
             Elements rows = doc.getElementsByTag("tr");
             for (Element row : rows) {
@@ -140,5 +162,14 @@ public class Libgen {
 
     public List<Book> searchTitle(String title) throws LibgenException, NoBookFoundException{
         return search(getIds(title, "title"));
+    }
+
+    public void setMaxResultsNumber(int i) {
+        if(i>0)
+            this.maxResultsNumber = i;
+    }
+
+    public int getMaxResultsNumber() {
+        return this.maxResultsNumber;
     }
 }

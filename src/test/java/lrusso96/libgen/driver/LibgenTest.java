@@ -16,6 +16,9 @@ import static org.junit.Assert.*;
 
 public class LibgenTest
 {
+
+    private static final int ENOUGH_MS = 2000;
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -33,7 +36,8 @@ public class LibgenTest
     }
 
     @Test
-    public void testNoBookException() throws NoMirrorAvailableException, NoBookFoundException, LibgenException {
+    public void testNoBookException() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
+        Thread.sleep(ENOUGH_MS);
         String book_title = "Malavaogliaaaaaaa";
         Libgen libgen = new Libgen();
         thrown.expect(NoBookFoundException.class);
@@ -41,7 +45,8 @@ public class LibgenTest
     }
 
     @Test
-    public void testBook() throws NoMirrorAvailableException, NoBookFoundException, LibgenException {
+    public void testBook() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
+        Thread.sleep(ENOUGH_MS);
         String book_title = "promessi sposi";
         Libgen libgen = new Libgen();
         List<Book> books = libgen.search(book_title);
@@ -60,7 +65,8 @@ public class LibgenTest
     }
 
     @Test
-    public void testCustomMirror() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, MalformedURLException {
+    public void testCustomMirror() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, MalformedURLException, InterruptedException {
+        Thread.sleep(ENOUGH_MS);
         String book_title = "divina commedia";
         Libgen libgen = new Libgen(new Mirror("http://libgen.is"), false);
         List<Book> books = libgen.search(book_title);
@@ -68,7 +74,40 @@ public class LibgenTest
     }
 
     @Test
-    public void testSearch() throws NoMirrorAvailableException, NoBookFoundException, LibgenException {
+    public void testMaxResultsNumber() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
+        Thread.sleep(ENOUGH_MS);
+        Libgen libgen = new Libgen();
+        libgen.setMaxResultsNumber(42);
+        assertEquals(42, libgen.getMaxResultsNumber());
+        libgen.setMaxResultsNumber(0);
+        assertEquals(42, libgen.getMaxResultsNumber());
+        libgen.setMaxResultsNumber(Libgen.DEFAULT_RESULTS_NUMBER);
+        assertEquals(Libgen.DEFAULT_RESULTS_NUMBER, libgen.getMaxResultsNumber());
+    }
+
+    @Test
+    public void testSearchWithoutMax() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
+        Thread.sleep(ENOUGH_MS);
+        String query = "platone";
+        Libgen libgen = new Libgen();
+        libgen.setMaxResultsNumber(Integer.MAX_VALUE);
+        List<Book> books = libgen.search(query);
+        assertTrue(books.size() > 50);
+    }
+
+    @Test
+    public void testSearchWithMaxResultsNumber() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
+        Thread.sleep(ENOUGH_MS);
+        String author = "platone";
+        Libgen libgen = new Libgen();
+        libgen.setMaxResultsNumber(4);
+        List<Book> books = libgen.searchAuthor(author);
+        assertEquals(4, books.size());
+    }
+
+    @Test
+    public void testSearch() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
+        Thread.sleep(ENOUGH_MS);
         String book_title = "apologia Socrate";
         Libgen libgen = new Libgen();
         List<Book> books = libgen.search(book_title);
@@ -76,7 +115,8 @@ public class LibgenTest
     }
 
     @Test
-    public void testSearchAuthor() throws NoMirrorAvailableException, NoBookFoundException, LibgenException {
+    public void testSearchAuthor() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
+        Thread.sleep(ENOUGH_MS);
         String author = "Plutarco";
         Libgen libgen = new Libgen();
         List<Book> books = libgen.searchAuthor(author);
@@ -84,13 +124,12 @@ public class LibgenTest
     }
 
     @Test
-    public void testDownloadLink() throws NoMirrorAvailableException, NoBookFoundException, LibgenException {
+    public void testDownloadLink() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
+        Thread.sleep(ENOUGH_MS);
         String author = "Platone";
         Libgen libgen = new Libgen();
         Book book = libgen.searchTitle(author).get(0);
         String url = libgen.getDownloadLink(book).toString();
         assertFalse(url.isEmpty());
     }
-
-
 }
