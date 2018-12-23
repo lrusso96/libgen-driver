@@ -74,7 +74,7 @@ public class LibgenTest
     }
 
     @Test
-    public void testMaxResultsNumber() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
+    public void testMaxResultsNumber() throws NoMirrorAvailableException, InterruptedException {
         Thread.sleep(ENOUGH_MS);
         Libgen libgen = new Libgen();
         libgen.setMaxResultsNumber(42);
@@ -112,6 +112,28 @@ public class LibgenTest
         Libgen libgen = new Libgen();
         List<Book> books = libgen.search(book_title);
         assertFalse(books.isEmpty());
+    }
+
+    @Test
+    public void testSorting() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
+        Thread.sleep(ENOUGH_MS);
+        String query = "Camilleri";
+        Libgen libgen = new Libgen();
+        libgen.setSorting(Field.YEAR);
+        libgen.setDecendingSort();
+        List<Book> books = libgen.search(query);
+        assert(books.get(0).getYear() >= books.get(1).getYear());
+
+        Thread.sleep(ENOUGH_MS);
+        libgen.setAscendingSort();
+        books = libgen.search(query);
+        assert(books.remove(books.size() - 1).getYear() >= books.remove(books.size() - 1).getYear());
+
+        Thread.sleep(ENOUGH_MS);
+        libgen.setSorting(Field.TITLE);
+        books = libgen.search(query);
+        assertNotEquals(books.get(0).getTitle().compareTo(books.get(1).getTitle()), 1);
+
     }
 
     @Test
