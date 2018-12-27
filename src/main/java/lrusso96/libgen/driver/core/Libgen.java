@@ -16,10 +16,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Libgen
@@ -179,28 +176,25 @@ public class Libgen
                 book.setExtension(bookObject.getString("extension"));
                 list.add(book);
             }
-            list.sort(new Comparator<Book>()
+            Collections.sort(list, (b1, b2) ->
             {
-                @Override
-                public int compare(Book b1, Book b2)
+                if (sorting_field.equals(Field.YEAR + ""))
                 {
-                    if (sorting_field.equals(Field.YEAR + ""))
-                    {
-                        if (sorting_mode.equals("ASC"))
-                            return Integer.compare(b1.getYear(), b2.getYear());
-                        return Integer.compare(b2.getYear(), b1.getYear());
-                    }
-                    if(sorting_field.equals(Field.TITLE + ""))
-                    {
-                        if (sorting_mode.equals("ASC"))
-                            return b1.getTitle().compareTo(b2.getTitle());
-                        return b2.getTitle().compareTo(b1.getTitle());
-                    }
-
-                    //never happens
-                    return b1.getTitle().compareTo(b2.getTitle());
+                    if (sorting_mode.equals("ASC"))
+                        return Integer.compare(b1.getYear(), b2.getYear());
+                    return Integer.compare(b2.getYear(), b1.getYear());
                 }
+                if(sorting_field.equals(Field.TITLE + ""))
+                {
+                    if (sorting_mode.equals("ASC"))
+                        return b1.getTitle().compareTo(b2.getTitle());
+                    return b2.getTitle().compareTo(b1.getTitle());
+                }
+
+                //never happens
+                return b1.getTitle().compareTo(b2.getTitle());
             });
+
             return list;
         }
         catch (IOException e)
