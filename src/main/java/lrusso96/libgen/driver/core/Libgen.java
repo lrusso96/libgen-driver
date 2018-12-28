@@ -7,6 +7,7 @@ import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -154,6 +155,8 @@ public class Libgen
             if (resp.body() == null)
                 throw new LibgenException("Invalid response");
             String body = resp.body().string();
+            System.out.println(body);
+            body = body.substring(body.indexOf("["), body.lastIndexOf("]") + 1);
             JSONArray response = new JSONArray(body);
             for (int i = 0; i < response.length(); i++)
             {
@@ -197,7 +200,7 @@ public class Libgen
 
             return list;
         }
-        catch (IOException e)
+        catch (IOException | JSONException e)
         {
             throw new LibgenException(e);
         }

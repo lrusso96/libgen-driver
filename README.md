@@ -49,7 +49,7 @@ allprojects {
 2) Add the dependency
 ```
 dependencies {
-    implementation 'com.gitlab.lrusso96:libgen-driver:0.3.1
+    implementation 'com.gitlab.lrusso96:libgen-driver:0.3.2
 }
 ```
 
