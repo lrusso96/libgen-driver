@@ -11,6 +11,7 @@ public class Book
     private String language;
     private int filesize;   //bytes
     private String extension;
+    private String cover_url;
 
     public int getId()
     {
@@ -107,11 +108,21 @@ public class Book
         this.extension = extension;
     }
 
+    public String getCoverUrl()
+    {
+        return cover_url;
+    }
+
+    void setCoverUrl(String cover_url)
+    {
+        this.cover_url = cover_url;
+    }
+
     @Override
     public String toString()
     {
         return "Book{" + "id=" + id + ", author='" + author + '\'' + ", title='" + title + '\'' + ", MD5='" + MD5 +
                 '\'' + ", year=" + year + ", pages=" + pages + ", language='" + language + '\'' + ", filesize=" +
-                getReadableFilesize() + ", extension='" + extension + '\'' + '}';
+                filesize + ", extension='" + extension + '\'' + ", cover_url='" + cover_url + '\'' + '}';
     }
 }

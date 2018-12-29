@@ -66,6 +66,7 @@ public class LibgenTest
         assertNotEquals(0, book.getPages());
         assertNotEquals(0, book.getYear());
         assertFalse(book.getExtension().isEmpty());
+        assertFalse(book.getCoverUrl().isEmpty());
     }
 
     @Test

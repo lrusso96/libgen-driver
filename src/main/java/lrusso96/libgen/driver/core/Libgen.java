@@ -140,7 +140,7 @@ public class Libgen
                     .readTimeout(10, TimeUnit.SECONDS)
                     .retryOnConnectionFailure(true).build();
 
-            String fields = "Author,Title,MD5,Year,Pages,Language,Filesize,Extension";
+            String fields = "Author,Title,MD5,Year,Pages,Language,Filesize,Extension,CoverURL";
             RequestBody formBody = new FormBody.Builder()
                     .add("ids", ids_comma.toString())
                     .add("fields", fields)
@@ -155,7 +155,6 @@ public class Libgen
             if (resp.body() == null)
                 throw new LibgenException("Invalid response");
             String body = resp.body().string();
-            System.out.println(body);
             body = body.substring(body.indexOf("["), body.lastIndexOf("]") + 1);
             JSONArray response = new JSONArray(body);
             for (int i = 0; i < response.length(); i++)
@@ -177,6 +176,7 @@ public class Libgen
                 if (NumberUtils.isParsable(o))
                     book.setFilesize(Integer.parseInt(o));
                 book.setExtension(bookObject.getString("extension"));
+                book.setCoverUrl(mirror.getCoverUrl(bookObject.getString("coverurl")));
                 list.add(book);
             }
             Collections.sort(list, (b1, b2) ->

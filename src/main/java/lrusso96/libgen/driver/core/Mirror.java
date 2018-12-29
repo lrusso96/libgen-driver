@@ -38,4 +38,10 @@ public class Mirror
         return "http://lib1.org/_ads/" + book.getMD5();
     }
 
+    String getCoverUrl(String cover_url)
+    {
+        return url.toString() + "/covers/" + cover_url;
+    }
+
+
 }
