@@ -40,6 +40,10 @@ public class Mirror
 
     String getCoverUrl(String cover_url)
     {
+        if(cover_url.isEmpty())
+            return null;
+        if(cover_url.startsWith("http"))
+            return cover_url;
         return url.toString() + "/covers/" + cover_url;
     }
 

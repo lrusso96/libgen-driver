@@ -32,7 +32,7 @@ You can easily add to your existing project through Maven or Gradle.
 <dependency>
     <groupId>com.gitlab.lrusso96</groupId>
     <artifactId>libgen-driver</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.3</version>
 </dependency>
 ```
 
@@ -49,7 +49,7 @@ allprojects {
 2) Add the dependency
 ```
 dependencies {
-    implementation 'com.gitlab.lrusso96:libgen-driver:0.3.2
+    implementation 'com.gitlab.lrusso96:libgen-driver:0.3.3
 }
 ```
 
