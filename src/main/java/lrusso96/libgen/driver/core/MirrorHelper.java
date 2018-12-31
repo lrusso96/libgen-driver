@@ -1,61 +1,19 @@
 package lrusso96.libgen.driver.core;
 
 import lrusso96.libgen.driver.exceptions.NoMirrorAvailableException;
-import org.jsoup.Jsoup;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 class MirrorHelper
 {
-    private static boolean isReachable(URL url)
+
+    static Mirror getFirstReachable(List<Mirror> mirrors) throws NoMirrorAvailableException
     {
-        try
+        for(Mirror mirror : mirrors)
         {
-            Jsoup.connect(url.toString()).get();
+            if(mirror.isReachable())
+                return mirror;
         }
-        catch (IOException e)
-        {
-            return false;
-        }
-        return true;
-    }
-
-    static URL getFirstReachable(List<URL> urls) throws NoMirrorAvailableException
-    {
-        for(URL url : urls)
-        {
-            if(isReachable(url))
-                return url;
-        }
-        throw new NoMirrorAvailableException("# urls tested: " + urls.size());
-    }
-
-    static URL getCoverUrl(URL url, String cover)
-    {
-        if(cover.isEmpty())
-            return null;
-        try {
-            if(cover.startsWith("http"))
-                return new URL(cover);
-            return new URL(url.toString() + "/covers/" + cover);
-        }
-        catch (MalformedURLException e) {
-            return null;
-        }
-    }
-
-    static URL getDownloadUrl(Book book) throws NoMirrorAvailableException
-    {
-        try {
-            URL url = new URL("http://lib1.org/_ads/" + book.getMD5());
-            if(isReachable(url))
-                return url;
-        }
-        catch (MalformedURLException ignored) { }
-
-        throw new NoMirrorAvailableException("no download url available");
+        throw new NoMirrorAvailableException("Mirrors not reachable: " + mirrors.size());
     }
 }

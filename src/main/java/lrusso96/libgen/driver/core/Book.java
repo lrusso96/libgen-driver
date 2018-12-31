@@ -1,7 +1,5 @@
 package lrusso96.libgen.driver.core;
 
-import java.net.URL;
-
 public class Book
 {
     private int id;
@@ -13,7 +11,7 @@ public class Book
     private String language;
     private int filesize;   //bytes
     private String extension;
-    private URL cover_url;
+    private String cover_url;
 
     public int getId()
     {
@@ -94,6 +92,7 @@ public class Book
         return String.format("%.1f %sB", filesize / Math.pow(unit, exp), pre);
     }
 
+
     void setFilesize(int filesize)
     {
         this.filesize = filesize;
@@ -109,12 +108,12 @@ public class Book
         this.extension = extension;
     }
 
-    public URL getCoverUrl()
+    public String getCoverUrl()
     {
         return cover_url;
     }
 
-    void setCoverUrl(URL cover_url)
+    void setCoverUrl(String cover_url)
     {
         this.cover_url = cover_url;
     }

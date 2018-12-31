@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -28,14 +27,14 @@ public class LibgenTest
     {
         thrown.expect(NoMirrorAvailableException.class);
         //should be down!
-        new Libgen(new URL("http://libgen.org"), true);
+        new Libgen(new Mirror("http://libgen.org"), true);
     }
 
     @Test
     public void testMalformedURLException() throws NoMirrorAvailableException, MalformedURLException
     {
         thrown.expect(MalformedURLException.class);
-        new Libgen(new URL("not a url"), false);
+        new Libgen(new Mirror("not a url"), false);
     }
 
     @Test
@@ -67,7 +66,7 @@ public class LibgenTest
         assertNotEquals(0, book.getPages());
         assertNotEquals(0, book.getYear());
         assertFalse(book.getExtension().isEmpty());
-        assertFalse(book.getCoverUrl().toString().isEmpty());
+        assertFalse(book.getCoverUrl().isEmpty());
     }
 
     @Test
@@ -75,7 +74,7 @@ public class LibgenTest
     {
         Thread.sleep(ENOUGH_MS);
         String book_title = "divina commedia";
-        Libgen libgen = new Libgen(new URL("http://libgen.is"), false);
+        Libgen libgen = new Libgen(new Mirror("http://libgen.is"), false);
         List<Book> books = libgen.search(book_title);
         assertFalse(books.isEmpty());
     }
@@ -159,13 +158,13 @@ public class LibgenTest
     }
 
     @Test
-    public void testDownloadURL() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException
+    public void testDownloadLink() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException
     {
         Thread.sleep(ENOUGH_MS);
         String author = "Platone";
         Libgen libgen = new Libgen();
         Book book = libgen.searchTitle(author).get(0);
-        String url = libgen.getDownloadURL(book).toString();
+        String url = libgen.getDownloadLink(book).toString();
         assertFalse(url.isEmpty());
     }
 }
