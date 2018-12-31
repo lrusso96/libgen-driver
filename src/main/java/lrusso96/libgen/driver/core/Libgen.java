@@ -59,7 +59,7 @@ public class Libgen
     {
         try
         {
-            Document doc = Jsoup.connect(mirror.getDownloadLink(book)).get();
+            Document doc = Jsoup.connect(mirror.getDownloadUrl(book)).get();
             Elements anchors = doc.getElementsByTag("a");
             for (Element anchor : anchors)
             {
@@ -200,7 +200,7 @@ public class Libgen
 
             return list;
         }
-        catch (IOException | JSONException e)
+        catch (IOException | JSONException | StringIndexOutOfBoundsException e)
         {
             throw new LibgenException(e);
         }

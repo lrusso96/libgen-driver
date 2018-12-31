@@ -33,7 +33,7 @@ public class Mirror
         return true;
     }
 
-    String getDownloadLink(Book book)
+    String getDownloadUrl(Book book)
     {
         return "http://lib1.org/_ads/" + book.getMD5();
     }
@@ -46,6 +46,4 @@ public class Mirror
             return cover_url;
         return url.toString() + "/covers/" + cover_url;
     }
-
-
 }
