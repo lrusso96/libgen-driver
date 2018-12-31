@@ -20,13 +20,16 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static lrusso96.libgen.driver.core.MirrorHelper.getCoverUrl;
+import static lrusso96.libgen.driver.core.MirrorHelper.getDownloadUrl;
+
 public class Libgen
 {
     public static final int DEFAULT_RESULTS_NUMBER = 25;
     public static final Field DEFAULT_SORTING_FIELD = Field.YEAR;
     public static final String DEFAULT_SORTING_MODE = "DESC";
-    private Mirror mirror;
-    private List<Mirror> mirrors = new LinkedList<>();
+    private URL mirror;
+    private List<URL> mirrors = new LinkedList<>();
     private int maxResultsNumber = DEFAULT_RESULTS_NUMBER;
     private String sorting_field = DEFAULT_SORTING_FIELD.toString();
     private String sorting_mode = DEFAULT_SORTING_MODE;
@@ -38,7 +41,7 @@ public class Libgen
         this.mirror = MirrorHelper.getFirstReachable(mirrors);
     }
 
-    public Libgen(Mirror mirror, boolean unique) throws NoMirrorAvailableException
+    public Libgen(URL mirror, boolean unique) throws NoMirrorAvailableException
     {
         if (!unique)
             initMirrors();
@@ -50,16 +53,16 @@ public class Libgen
     {
         try
         {
-            mirrors.add(new Mirror("http://libgen.is"));
+            mirrors.add(new URL("http://libgen.is"));
         }
         catch (MalformedURLException ignored) { }
     }
 
-    public URL getDownloadLink(Book book) throws LibgenException, NoMirrorAvailableException
+    public URL getDownloadURL(Book book) throws LibgenException, NoMirrorAvailableException
     {
         try
         {
-            Document doc = Jsoup.connect(mirror.getDownloadUrl(book)).get();
+            Document doc = Jsoup.connect(getDownloadUrl(book).toString()).get();
             Elements anchors = doc.getElementsByTag("a");
             for (Element anchor : anchors)
             {
@@ -69,9 +72,9 @@ public class Libgen
             }
         } catch (IOException e)
         {
-            throw new LibgenException(e);
+            throw new LibgenException("invalid response");
         }
-        throw new NoMirrorAvailableException("Error occurred");
+        throw new NoMirrorAvailableException("");
     }
 
 
@@ -99,7 +102,7 @@ public class Libgen
     {
         try {
             List<String> list = new ArrayList<>();
-            Document doc = Jsoup.connect(mirror.getUrl() + "/search.php")
+            Document doc = Jsoup.connect(mirror + "/search.php")
                     .data("req", stuff)
                     .data("column", column)
                     .data("res", results + "")
@@ -118,7 +121,7 @@ public class Libgen
         }
         catch (IOException e)
         {
-            throw new LibgenException(e);
+            throw new LibgenException("invalid response");
         }
     }
 
@@ -146,7 +149,7 @@ public class Libgen
                     .add("fields", fields)
                     .build();
             Request req = new Request.Builder()
-                    .url(mirror.getUrl() + "/json.php")
+                    .url(mirror + "/json.php")
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .post(formBody)
@@ -176,7 +179,7 @@ public class Libgen
                 if (NumberUtils.isParsable(o))
                     book.setFilesize(Integer.parseInt(o));
                 book.setExtension(bookObject.getString("extension"));
-                book.setCoverUrl(mirror.getCoverUrl(bookObject.getString("coverurl")));
+                book.setCoverUrl(getCoverUrl(mirror, bookObject.getString("coverurl")));
                 list.add(book);
             }
             Collections.sort(list, (b1, b2) ->
@@ -202,7 +205,7 @@ public class Libgen
         }
         catch (IOException | JSONException | StringIndexOutOfBoundsException e)
         {
-            throw new LibgenException(e);
+            throw new LibgenException("invalid response");
         }
     }
 
