@@ -25,9 +25,9 @@ class MirrorHelper
 
     static URL getFirstReachable(List<URL> urls) throws NoMirrorAvailableException
     {
-        for(URL url : urls)
+        for (URL url : urls)
         {
-            if(isReachable(url))
+            if (isReachable(url))
                 return url;
         }
         throw new NoMirrorAvailableException("# urls tested: " + urls.size());
@@ -35,27 +35,17 @@ class MirrorHelper
 
     static URL getCoverUrl(URL url, String cover)
     {
-        if(cover.isEmpty())
+        if (cover.isEmpty())
             return null;
-        try {
-            if(cover.startsWith("http"))
+        try
+        {
+            if (cover.startsWith("http"))
                 return new URL(cover);
             return new URL(url.toString() + "/covers/" + cover);
         }
-        catch (MalformedURLException e) {
+        catch (MalformedURLException e)
+        {
             return null;
         }
-    }
-
-    static URL getDownloadUrl(Book book) throws NoMirrorAvailableException
-    {
-        try {
-            URL url = new URL("http://lib1.org/_ads/" + book.getMD5());
-            if(isReachable(url))
-                return url;
-        }
-        catch (MalformedURLException ignored) { }
-
-        throw new NoMirrorAvailableException("no download url available");
     }
 }

@@ -17,17 +17,19 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static lrusso96.libgen.driver.core.MirrorHelper.getCoverUrl;
-import static lrusso96.libgen.driver.core.MirrorHelper.getDownloadUrl;
 
 public class Libgen
 {
     public static final int DEFAULT_RESULTS_NUMBER = 25;
-    public static final Field DEFAULT_SORTING_FIELD = Field.YEAR;
-    public static final String DEFAULT_SORTING_MODE = "DESC";
+    private static final Field DEFAULT_SORTING_FIELD = Field.YEAR;
+    private static final String DEFAULT_SORTING_MODE = "DESC";
     private URL mirror;
     private List<URL> mirrors = new LinkedList<>();
     private int maxResultsNumber = DEFAULT_RESULTS_NUMBER;
@@ -62,7 +64,8 @@ public class Libgen
     {
         try
         {
-            Document doc = Jsoup.connect(getDownloadUrl(book).toString()).get();
+            URL url = new URL("http://lib1.org/_ads/" + book.getMD5());
+            Document doc = Jsoup.connect(url.toString()).get();
             Elements anchors = doc.getElementsByTag("a");
             for (Element anchor : anchors)
             {
@@ -70,11 +73,12 @@ public class Libgen
                 if (text.toLowerCase().equals("get"))
                     return new URL(anchor.attr("href"));
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new LibgenException("invalid response");
         }
-        throw new NoMirrorAvailableException("");
+        throw new NoMirrorAvailableException("no download url available");
     }
 
 
@@ -100,7 +104,8 @@ public class Libgen
 
     private List<String> getIds(String stuff, String column, int page, int results) throws LibgenException
     {
-        try {
+        try
+        {
             List<String> list = new ArrayList<>();
             Document doc = Jsoup.connect(mirror + "/search.php")
                     .data("req", stuff)
@@ -108,11 +113,11 @@ public class Libgen
                     .data("res", results + "")
                     .data("sort", sorting_field)
                     .data("sortmode", sorting_mode)
-                    .data("page", page + "")
+                    .data("page",page + "")
                     .get();
-
             Elements rows = doc.getElementsByTag("tr");
-            for (Element row : rows) {
+            for (Element row : rows)
+            {
                 String id = row.child(0).text();
                 if (StringUtils.isNumeric(id))
                     list.add(id);
@@ -141,7 +146,8 @@ public class Libgen
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
                     .readTimeout(10, TimeUnit.SECONDS)
-                    .retryOnConnectionFailure(true).build();
+                    .retryOnConnectionFailure(true)
+                    .build();
 
             String fields = "Author,Title,MD5,Year,Pages,Language,Filesize,Extension,CoverURL";
             RequestBody formBody = new FormBody.Builder()
@@ -190,13 +196,12 @@ public class Libgen
                         return Integer.compare(b1.getYear(), b2.getYear());
                     return Integer.compare(b2.getYear(), b1.getYear());
                 }
-                if(sorting_field.equals(Field.TITLE + ""))
+                if (sorting_field.equals(Field.TITLE + ""))
                 {
                     if (sorting_mode.equals("ASC"))
                         return b1.getTitle().compareTo(b2.getTitle());
                     return b2.getTitle().compareTo(b1.getTitle());
                 }
-
                 //never happens
                 return b1.getTitle().compareTo(b2.getTitle());
             });
@@ -231,7 +236,8 @@ public class Libgen
 
     public void setMaxResultsNumber(int i)
     {
-        if (i > 0) this.maxResultsNumber = i;
+        if (i > 0)
+            this.maxResultsNumber = i;
     }
 
     public void setSorting(Field field)
