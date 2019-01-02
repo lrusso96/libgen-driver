@@ -62,26 +62,28 @@ public class Libgen
 
     public void loadDownloadURL(Book book) throws LibgenException, NoMirrorAvailableException
     {
-        if (book.getDownload() == null)
+        if (book.getDownload() != null)
+            return;
+        try
         {
-            try
+            URL url = new URL("http://lib1.org/_ads/" + book.getMD5());
+            Document doc = Jsoup.connect(url.toString()).get();
+            Elements anchors = doc.getElementsByTag("a");
+            for (Element anchor : anchors)
             {
-                URL url = new URL("http://lib1.org/_ads/" + book.getMD5());
-                Document doc = Jsoup.connect(url.toString()).get();
-                Elements anchors = doc.getElementsByTag("a");
-                for (Element anchor : anchors)
+                String text = anchor.text();
+                if (text.toLowerCase().equals("get"))
                 {
-                    String text = anchor.text();
-                    if (text.toLowerCase().equals("get"))
-                        book.setDownload(new URL(anchor.attr("href")));
+                    book.setDownload(new URL(anchor.attr("href")));
+                    return;
                 }
             }
-            catch (IOException e)
-            {
-                throw new LibgenException("invalid response");
-            }
-            throw new NoMirrorAvailableException("no download url available");
         }
+        catch (IOException e)
+        {
+            throw new LibgenException("invalid response");
+        }
+        throw new NoMirrorAvailableException("no download url available");
     }
 
 
