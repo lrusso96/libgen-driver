@@ -13,7 +13,8 @@ public class Book
     private String language;
     private int filesize;   //bytes
     private String extension;
-    private URL cover_url;
+    private URL cover;
+    private URL download;
 
     public int getId()
     {
@@ -109,14 +110,24 @@ public class Book
         this.extension = extension;
     }
 
-    public URL getCoverUrl()
+    public URL getCover()
     {
-        return cover_url;
+        return cover;
     }
 
-    void setCoverUrl(URL cover_url)
+    void setCover(URL cover_url)
     {
-        this.cover_url = cover_url;
+        this.cover = cover_url;
+    }
+
+    public URL getDownload()
+    {
+        return download;
+    }
+
+    public void setDownload(URL download)
+    {
+        this.download = download;
     }
 
     @Override
@@ -124,6 +135,8 @@ public class Book
     {
         return "Book{" + "id=" + id + ", author='" + author + '\'' + ", title='" + title + '\'' + ", MD5='" + MD5 +
                 '\'' + ", year=" + year + ", pages=" + pages + ", language='" + language + '\'' + ", filesize=" +
-                filesize + ", extension='" + extension + '\'' + ", cover_url='" + cover_url + '\'' + '}';
+                filesize + ", extension='" + extension + '\'' + ", cover='" + cover + '\'' + '}';
     }
+
+
 }

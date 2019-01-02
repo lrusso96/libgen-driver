@@ -67,7 +67,7 @@ public class LibgenTest
         assertNotEquals(0, book.getPages());
         assertNotEquals(0, book.getYear());
         assertFalse(book.getExtension().isEmpty());
-        assertFalse(book.getCoverUrl().toString().isEmpty());
+        assertFalse(book.getCover().toString().isEmpty());
     }
 
     @Test
@@ -165,7 +165,8 @@ public class LibgenTest
         String author = "Platone";
         Libgen libgen = new Libgen();
         Book book = libgen.searchTitle(author).get(0);
-        String url = libgen.getDownloadURL(book).toString();
+        libgen.loadDownloadURL(book);
+        String url = book.getDownload().toString();
         assertFalse(url.isEmpty());
     }
 }
