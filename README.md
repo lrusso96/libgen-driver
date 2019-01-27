@@ -1,4 +1,4 @@
-# Libgen Driver 
+# Libgen Driver  [![Build Status](https://travis-ci.com/LithiumSR/openstud_driver.svg?branch=master)](https://travis-ci.com/lrusso96/libgen-driver) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 Libgen driver is Java Libary to obtain infos from Libgen.
 
@@ -30,7 +30,7 @@ You can easily add to your existing project through Maven or Gradle.
 2) Add the dependency
 ```
 <dependency>
-    <groupId>com.gitlab.lrusso96</groupId>
+    <groupId>com.github.lrusso96</groupId>
     <artifactId>libgen-driver</artifactId>
     <version>0.3.6</version>
 </dependency>
@@ -49,7 +49,7 @@ allprojects {
 2) Add the dependency
 ```
 dependencies {
-    implementation 'com.gitlab.lrusso96:libgen-driver:v0.3.6
+    implementation 'com.github.lrusso96:libgen-driver:v0.3.6
 }
 ```
 
