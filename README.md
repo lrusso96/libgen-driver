@@ -1,4 +1,10 @@
-# Libgen Driver  [![Build Status](https://travis-ci.com/lrusso96/libgen-driver.svg?branch=master)](https://travis-ci.com/lrusso96/libgen-driver) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+# Libgen Driver
+[![Build Status](https://travis-ci.com/lrusso96/libgen-driver.svg?branch=master)](https://travis-ci.com/lrusso96/libgen-driver)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+[![CodeFactor](https://www.codefactor.io/repository/github/lrusso96/libgen-driver/badge)](https://www.codefactor.io/repository/github/lrusso96/libgen-driver)
+[![BCH compliance](https://bettercodehub.com/edge/badge/lrusso96/libgen-driver?branch=master)](https://bettercodehub.com/)
+[![codecov](https://codecov.io/gh/lrusso96/libgen-driver/branch/master/graph/badge.svg)](https://codecov.io/gh/lrusso96/libgen-driver)
 
 Libgen driver is Java Libary to obtain infos from Libgen.
 
