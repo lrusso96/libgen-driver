@@ -39,7 +39,7 @@ You can easily add to your existing project through Maven or Gradle.
 <dependency>
     <groupId>com.github.lrusso96</groupId>
     <artifactId>libgen-driver</artifactId>
-    <version>0.3.6</version>
+    <version>0.4.0</version>
 </dependency>
 ```
 
@@ -56,7 +56,7 @@ allprojects {
 2) Add the dependency
 ```
 dependencies {
-    implementation 'com.github.lrusso96:libgen-driver:v0.3.6
+    implementation 'com.github.lrusso96:libgen-driver:v0.4.0
 }
 ```
 
