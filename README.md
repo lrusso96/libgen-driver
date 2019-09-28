@@ -1,6 +1,7 @@
 # Libgen Driver
 [![Build Status](https://travis-ci.com/lrusso96/libgen-driver.svg?branch=master)](https://travis-ci.com/lrusso96/libgen-driver)
 [![Maintainability](https://api.codeclimate.com/v1/badges/5544950a3cb08f1d4952/maintainability)](https://codeclimate.com/github/lrusso96/libgen-driver/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/5544950a3cb08f1d4952/test_coverage)](https://codeclimate.com/github/lrusso96/libgen-driver/test_coverage)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
