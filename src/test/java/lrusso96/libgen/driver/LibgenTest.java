@@ -9,8 +9,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -24,18 +24,18 @@ public class LibgenTest
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void testNoMirrorException() throws NoMirrorAvailableException, MalformedURLException
+    public void testNoMirrorException() throws NoMirrorAvailableException, URISyntaxException
     {
         thrown.expect(NoMirrorAvailableException.class);
         //should be down!
-        new Libgen(new URL("http://libgen.org"), true);
+        new Libgen(new URI("http://libgen.is"), true);
     }
 
     @Test
-    public void testMalformedURLException() throws NoMirrorAvailableException, MalformedURLException
+    public void testMalformedURIException() throws NoMirrorAvailableException, URISyntaxException
     {
-        thrown.expect(MalformedURLException.class);
-        new Libgen(new URL("not a url"), false);
+        thrown.expect(URISyntaxException.class);
+        new Libgen(new URI("not a uri"), false);
     }
 
     @Test
@@ -71,11 +71,10 @@ public class LibgenTest
     }
 
     @Test
-    public void testCustomMirror() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, MalformedURLException, InterruptedException
-    {
+    public void testCustomMirror() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException, URISyntaxException {
         Thread.sleep(ENOUGH_MS);
         String book_title = "divina commedia";
-        Libgen libgen = new Libgen(new URL("http://libgen.is"), false);
+        Libgen libgen = new Libgen(new URI("http://93.174.95.27/"), false);
         List<Book> books = libgen.search(book_title);
         assertFalse(books.isEmpty());
     }
@@ -159,14 +158,14 @@ public class LibgenTest
     }
 
     @Test
-    public void testDownloadURL() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException
+    public void testDownloadURI() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException
     {
         Thread.sleep(ENOUGH_MS);
         String author = "Platone";
         Libgen libgen = new Libgen();
         Book book = libgen.searchTitle(author).get(0);
-        libgen.loadDownloadURL(book);
-        String url = book.getDownload().toString();
-        assertFalse(url.isEmpty());
+        libgen.loadDownloadURI(book);
+        String uri = book.getDownload().toString();
+        assertFalse(uri.isEmpty());
     }
 }

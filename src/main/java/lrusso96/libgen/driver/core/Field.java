@@ -1,11 +1,9 @@
 package lrusso96.libgen.driver.core;
 
-public enum Field
-{
+public enum Field {
     AUTHOR("author"),
     TITLE("title"),
-    YEAR("year")
-    ;
+    YEAR("year");
 
     private final String text;
 

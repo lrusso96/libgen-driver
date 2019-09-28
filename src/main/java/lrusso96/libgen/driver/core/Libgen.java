@@ -15,86 +15,74 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static lrusso96.libgen.driver.core.MirrorHelper.getCoverUrl;
+import static lrusso96.libgen.driver.core.MirrorHelper.getCoverUri;
 
-public class Libgen
-{
+public class Libgen {
     public static final int DEFAULT_RESULTS_NUMBER = 25;
     private static final Field DEFAULT_SORTING_FIELD = Field.YEAR;
     private static final String DEFAULT_SORTING_MODE = "DESC";
-    private URL mirror;
-    private List<URL> mirrors = new LinkedList<>();
+    private URI mirror;
+    private List<URI> mirrors = new LinkedList<>();
     private int maxResultsNumber = DEFAULT_RESULTS_NUMBER;
     private String sorting_field = DEFAULT_SORTING_FIELD.toString();
     private String sorting_mode = DEFAULT_SORTING_MODE;
 
 
-    public Libgen() throws NoMirrorAvailableException
-    {
+    public Libgen() throws NoMirrorAvailableException {
         initMirrors();
         this.mirror = MirrorHelper.getFirstReachable(mirrors);
     }
 
-    public Libgen(URL mirror, boolean unique) throws NoMirrorAvailableException
-    {
+    public Libgen(URI mirror, boolean unique) throws NoMirrorAvailableException {
         if (!unique)
             initMirrors();
         mirrors.add(mirror);
         this.mirror = MirrorHelper.getFirstReachable(mirrors);
     }
 
-    private void initMirrors()
-    {
-        try
-        {
-            mirrors.add(new URL("http://libgen.is"));
+    private void initMirrors() {
+        try {
+            mirrors.add(new URI("http://93.174.95.27/"));
+        } catch (URISyntaxException ignored) {
         }
-        catch (MalformedURLException ignored) { }
     }
 
-    public void loadDownloadURL(Book book) throws LibgenException, NoMirrorAvailableException
-    {
+    public void loadDownloadURI(Book book) throws LibgenException, NoMirrorAvailableException {
         if (book.getDownload() != null)
             return;
-        try
-        {
-            URL url = new URL("http://lib1.org/_ads/" + book.getMD5());
-            Document doc = Jsoup.connect(url.toString()).get();
+        try {
+            URI uri = new URI("http://93.174.95.29/_ads/" + book.getMD5());
+            Document doc = Jsoup.connect(uri.toString()).get();
             Elements anchors = doc.getElementsByTag("a");
-            for (Element anchor : anchors)
-            {
+            for (Element anchor : anchors) {
                 String text = anchor.text();
-                if (text.toLowerCase().equals("get"))
-                {
-                    book.setDownload(new URL(anchor.attr("href")));
+                if (text.toLowerCase().equals("get")) {
+                    book.setDownload(new URI(anchor.attr("href")));
                     return;
                 }
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new LibgenException("invalid response");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
-        throw new NoMirrorAvailableException("no download url available");
+        throw new NoMirrorAvailableException("no download uri available");
     }
 
 
-    private List<String> getIds(String stuff, String column) throws LibgenException
-    {
+    private List<String> getIds(String stuff, String column) throws LibgenException {
         int page = 1;
         //reduce number of pages requested!
         int results = maxResultsNumber <= 25 ? 25 : maxResultsNumber <= 50 ? 50 : 100;
         List<String> ids = getIds(stuff, column, page, results);
-        while (ids.size() < maxResultsNumber)
-        {
+        while (ids.size() < maxResultsNumber) {
             page++;
             List<String> new_ids = getIds(stuff, column, page, results);
             if (new_ids.isEmpty())
@@ -107,10 +95,8 @@ public class Libgen
         return ids;
     }
 
-    private List<String> getIds(String stuff, String column, int page, int results) throws LibgenException
-    {
-        try
-        {
+    private List<String> getIds(String stuff, String column, int page, int results) throws LibgenException {
+        try {
             List<String> list = new ArrayList<>();
             Document doc = Jsoup.connect(mirror + "/search.php")
                     .data("req", stuff)
@@ -118,25 +104,21 @@ public class Libgen
                     .data("res", results + "")
                     .data("sort", sorting_field)
                     .data("sortmode", sorting_mode)
-                    .data("page",page + "")
+                    .data("page", page + "")
                     .get();
             Elements rows = doc.getElementsByTag("tr");
-            for (Element row : rows)
-            {
+            for (Element row : rows) {
                 String id = row.child(0).text();
                 if (StringUtils.isNumeric(id))
                     list.add(id);
             }
             return list;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new LibgenException("invalid response");
         }
     }
 
-    private List<Book> search(List<String> ids) throws LibgenException, NoBookFoundException
-    {
+    private List<Book> search(List<String> ids) throws LibgenException, NoBookFoundException {
         if (ids.isEmpty())
             throw new NoBookFoundException("Try a new query");
         List<Book> list = new ArrayList<>();
@@ -145,8 +127,7 @@ public class Libgen
             ids_comma.append(",").append(id);
         ids_comma.replace(0, 1, "");
 
-        try
-        {
+        try {
             OkHttpClient client = new OkHttpClient.Builder()
                     .connectTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(10, TimeUnit.SECONDS)
@@ -171,8 +152,7 @@ public class Libgen
             String body = resp.body().string();
             body = body.substring(body.indexOf("["), body.lastIndexOf("]") + 1);
             JSONArray response = new JSONArray(body);
-            for (int i = 0; i < response.length(); i++)
-            {
+            for (int i = 0; i < response.length(); i++) {
                 JSONObject bookObject = response.getJSONObject(i);
                 Book book = new Book();
                 book.setId(Integer.parseInt(ids.get(i)));
@@ -190,19 +170,17 @@ public class Libgen
                 if (NumberUtils.isParsable(o))
                     book.setFilesize(Integer.parseInt(o));
                 book.setExtension(bookObject.getString("extension"));
-                book.setCover(getCoverUrl(mirror, bookObject.getString("coverurl")));
+                book.setCover(getCoverUri(mirror, bookObject.getString("coverurl")));
                 list.add(book);
             }
-            Collections.sort(list, (b1, b2) ->
+            list.sort((b1, b2) ->
             {
-                if (sorting_field.equals(Field.YEAR + ""))
-                {
+                if (sorting_field.equals(Field.YEAR + "")) {
                     if (sorting_mode.equals("ASC"))
                         return Integer.compare(b1.getYear(), b2.getYear());
                     return Integer.compare(b2.getYear(), b1.getYear());
                 }
-                if (sorting_field.equals(Field.TITLE + ""))
-                {
+                if (sorting_field.equals(Field.TITLE + "")) {
                     if (sorting_mode.equals("ASC"))
                         return b1.getTitle().compareTo(b2.getTitle());
                     return b2.getTitle().compareTo(b1.getTitle());
@@ -212,51 +190,41 @@ public class Libgen
             });
 
             return list;
-        }
-        catch (IOException | JSONException | StringIndexOutOfBoundsException e)
-        {
+        } catch (IOException | JSONException | StringIndexOutOfBoundsException e) {
             throw new LibgenException("invalid response");
         }
     }
 
-    public List<Book> search(String stuff) throws LibgenException, NoBookFoundException
-    {
+    public List<Book> search(String stuff) throws LibgenException, NoBookFoundException {
         return search(getIds(stuff, "def"));
     }
 
-    public List<Book> searchAuthor(String author) throws LibgenException, NoBookFoundException
-    {
+    public List<Book> searchAuthor(String author) throws LibgenException, NoBookFoundException {
         return search(getIds(author, Field.AUTHOR + ""));
     }
 
-    public List<Book> searchTitle(String title) throws LibgenException, NoBookFoundException
-    {
+    public List<Book> searchTitle(String title) throws LibgenException, NoBookFoundException {
         return search(getIds(title, Field.AUTHOR + ""));
     }
 
-    public int getMaxResultsNumber()
-    {
+    public int getMaxResultsNumber() {
         return this.maxResultsNumber;
     }
 
-    public void setMaxResultsNumber(int i)
-    {
+    public void setMaxResultsNumber(int i) {
         if (i > 0)
             this.maxResultsNumber = i;
     }
 
-    public void setSorting(Field field)
-    {
+    public void setSorting(Field field) {
         this.sorting_field = field.toString();
     }
 
-    public void setAscendingSort()
-    {
+    public void setAscendingSort() {
         this.sorting_mode = "ASC";
     }
 
-    public void setDecendingSort()
-    {
+    public void setDecendingSort() {
         this.sorting_mode = "DESC";
     }
 }

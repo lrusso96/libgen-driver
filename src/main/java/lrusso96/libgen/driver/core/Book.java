@@ -1,9 +1,8 @@
 package lrusso96.libgen.driver.core;
 
-import java.net.URL;
+import java.net.URI;
 
-public class Book
-{
+public class Book {
     private int id;
     private String author;
     private String title;
@@ -13,81 +12,66 @@ public class Book
     private String language;
     private int filesize;   //bytes
     private String extension;
-    private URL cover;
-    private URL download;
+    private URI cover;
+    private URI download;
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    void setId(int id)
-    {
+    void setId(int id) {
         this.id = id;
     }
 
-    public String getAuthor()
-    {
+    public String getAuthor() {
         return author;
     }
 
-    void setAuthor(String author)
-    {
+    void setAuthor(String author) {
         this.author = author;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return title;
     }
 
-    void setTitle(String title)
-    {
+    void setTitle(String title) {
         this.title = title;
     }
 
-    public String getMD5()
-    {
+    public String getMD5() {
         return MD5;
     }
 
-    void setMD5(String MD5)
-    {
+    void setMD5(String MD5) {
         this.MD5 = MD5;
     }
 
-    public int getYear()
-    {
+    public int getYear() {
         return year;
     }
 
-    void setYear(int year)
-    {
+    void setYear(int year) {
         this.year = year;
     }
 
-    public int getPages()
-    {
+    public int getPages() {
         return pages;
     }
 
-    void setPages(int pages)
-    {
+    void setPages(int pages) {
         this.pages = pages;
     }
 
-    public String getLanguage()
-    {
+    public String getLanguage() {
         return language;
     }
 
-    void setLanguage(String language)
-    {
+    void setLanguage(String language) {
         this.language = language;
     }
 
-    public String getReadableFilesize()
-    {
+    public String getReadableFilesize() {
         int unit = 1000;
         if (filesize < unit) return filesize + " B";
         int exp = (int) (Math.log(filesize) / Math.log(unit));
@@ -95,44 +79,36 @@ public class Book
         return String.format("%.1f %sB", filesize / Math.pow(unit, exp), pre);
     }
 
-    void setFilesize(int filesize)
-    {
+    void setFilesize(int filesize) {
         this.filesize = filesize;
     }
 
-    public String getExtension()
-    {
+    public String getExtension() {
         return extension;
     }
 
-    void setExtension(String extension)
-    {
+    void setExtension(String extension) {
         this.extension = extension;
     }
 
-    public URL getCover()
-    {
+    public URI getCover() {
         return cover;
     }
 
-    void setCover(URL cover_url)
-    {
-        this.cover = cover_url;
+    void setCover(URI cover_uri) {
+        this.cover = cover_uri;
     }
 
-    public URL getDownload()
-    {
+    public URI getDownload() {
         return download;
     }
 
-    public void setDownload(URL download)
-    {
+    public void setDownload(URI download) {
         this.download = download;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Book{" + "id=" + id + ", author='" + author + '\'' + ", title='" + title + '\'' + ", MD5='" + MD5 +
                 '\'' + ", year=" + year + ", pages=" + pages + ", language='" + language + '\'' + ", filesize=" +
                 filesize + ", extension='" + extension + '\'' + ", cover='" + cover + '\'' + '}';
