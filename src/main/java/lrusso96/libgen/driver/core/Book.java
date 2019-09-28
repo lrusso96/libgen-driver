@@ -113,6 +113,4 @@ public class Book {
                 '\'' + ", year=" + year + ", pages=" + pages + ", language='" + language + '\'' + ", filesize=" +
                 filesize + ", extension='" + extension + '\'' + ", cover='" + cover + '\'' + '}';
     }
-
-
 }

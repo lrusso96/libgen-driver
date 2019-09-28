@@ -1,7 +1,8 @@
 package lrusso96.libgen.driver;
 
-import lrusso96.libgen.driver.core.*;
-
+import lrusso96.libgen.driver.core.Book;
+import lrusso96.libgen.driver.core.Field;
+import lrusso96.libgen.driver.core.Libgen;
 import lrusso96.libgen.driver.exceptions.LibgenException;
 import lrusso96.libgen.driver.exceptions.NoBookFoundException;
 import lrusso96.libgen.driver.exceptions.NoMirrorAvailableException;
@@ -15,8 +16,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class LibgenTest
-{
+public class LibgenTest {
 
     private static final int ENOUGH_MS = 2000;
 
@@ -32,15 +32,13 @@ public class LibgenTest
     }*/
 
     @Test
-    public void testMalformedURIException() throws NoMirrorAvailableException, URISyntaxException
-    {
+    public void testMalformedURIException() throws NoMirrorAvailableException, URISyntaxException {
         thrown.expect(URISyntaxException.class);
         new Libgen(new URI("not a uri"), false);
     }
 
     @Test
-    public void testNoBookException() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException
-    {
+    public void testNoBookException() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
         Thread.sleep(ENOUGH_MS);
         String book_title = "Malavaogliaaaaaaa";
         Libgen libgen = new Libgen();
@@ -49,8 +47,7 @@ public class LibgenTest
     }
 
     @Test
-    public void testBook() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException
-    {
+    public void testBook() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
         Thread.sleep(ENOUGH_MS);
         String book_title = "promessi sposi";
         Libgen libgen = new Libgen();
@@ -80,8 +77,7 @@ public class LibgenTest
     }
 
     @Test
-    public void testMaxResultsNumber() throws NoMirrorAvailableException, InterruptedException
-    {
+    public void testMaxResultsNumber() throws NoMirrorAvailableException, InterruptedException {
         Thread.sleep(ENOUGH_MS);
         Libgen libgen = new Libgen();
         libgen.setMaxResultsNumber(42);
@@ -93,8 +89,7 @@ public class LibgenTest
     }
 
     @Test
-    public void testSearchWithoutMax() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException
-    {
+    public void testSearchWithoutMax() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
         Thread.sleep(ENOUGH_MS);
         String query = "platone";
         Libgen libgen = new Libgen();
@@ -104,8 +99,7 @@ public class LibgenTest
     }
 
     @Test
-    public void testSearchWithMaxResultsNumber() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException
-    {
+    public void testSearchWithMaxResultsNumber() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
         Thread.sleep(ENOUGH_MS);
         String author = "platone";
         Libgen libgen = new Libgen();
@@ -115,8 +109,7 @@ public class LibgenTest
     }
 
     @Test
-    public void testSearch() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException
-    {
+    public void testSearch() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
         Thread.sleep(ENOUGH_MS);
         String book_title = "apologia Socrate";
         Libgen libgen = new Libgen();
@@ -125,22 +118,21 @@ public class LibgenTest
     }
 
     @Test
-    public void testSorting() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException
-    {
+    public void testSorting() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
         Thread.sleep(ENOUGH_MS);
         String query = "Camilleri";
         Libgen libgen = new Libgen();
         libgen.setSorting(Field.YEAR);
-        libgen.setDecendingSort();
+        libgen.setDescendingSort();
         List<Book> books = libgen.search(query);
-        assert(books.get(0).getYear() >= books.get(1).getYear());
+        assert (books.get(0).getYear() >= books.get(1).getYear());
 
         Thread.sleep(ENOUGH_MS);
         libgen.setAscendingSort();
         books = libgen.search(query);
         int year1 = books.remove(books.size() - 1).getYear();
         int year2 = books.remove(books.size() - 1).getYear();
-        assert( year1 >= year2);
+        assert (year1 >= year2);
 
         Thread.sleep(ENOUGH_MS);
         libgen.setSorting(Field.TITLE);
@@ -150,8 +142,7 @@ public class LibgenTest
     }
 
     @Test
-    public void testSearchAuthor() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException
-    {
+    public void testSearchAuthor() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
         Thread.sleep(ENOUGH_MS);
         String author = "Plutarco";
         Libgen libgen = new Libgen();
@@ -160,8 +151,7 @@ public class LibgenTest
     }
 
     @Test
-    public void testDownloadURI() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException
-    {
+    public void testDownloadURI() throws NoMirrorAvailableException, NoBookFoundException, LibgenException, InterruptedException {
         Thread.sleep(ENOUGH_MS);
         String author = "Platone";
         Libgen libgen = new Libgen();

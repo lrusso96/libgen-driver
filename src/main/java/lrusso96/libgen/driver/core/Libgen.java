@@ -122,55 +122,14 @@ public class Libgen {
         if (ids.isEmpty())
             throw new NoBookFoundException("Try a new query");
         List<Book> list = new ArrayList<>();
-        StringBuilder ids_comma = new StringBuilder();
-        for (String id : ids)
-            ids_comma.append(",").append(id);
-        ids_comma.replace(0, 1, "");
 
         try {
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .connectTimeout(10, TimeUnit.SECONDS)
-                    .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(10, TimeUnit.SECONDS)
-                    .retryOnConnectionFailure(true)
-                    .build();
-
-            String fields = "Author,Title,MD5,Year,Pages,Language,Filesize,Extension,CoverURL";
-            RequestBody formBody = new FormBody.Builder()
-                    .add("ids", ids_comma.toString())
-                    .add("fields", fields)
-                    .build();
-            Request req = new Request.Builder()
-                    .url(mirror + "/json.php")
-                    .header("Accept", "application/json")
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .post(formBody)
-                    .build();
-            Response resp = client.newCall(req).execute();
-            if (resp.body() == null)
-                throw new LibgenException("Invalid response");
-            String body = resp.body().string();
-            body = body.substring(body.indexOf("["), body.lastIndexOf("]") + 1);
+            String body = search_request(ids);
             JSONArray response = new JSONArray(body);
             for (int i = 0; i < response.length(); i++) {
                 JSONObject bookObject = response.getJSONObject(i);
-                Book book = new Book();
+                Book book = parseBook(bookObject);
                 book.setId(Integer.parseInt(ids.get(i)));
-                book.setAuthor(bookObject.getString(Field.AUTHOR + ""));
-                book.setTitle(bookObject.getString(Field.TITLE + ""));
-                book.setMD5(bookObject.getString("md5"));
-                String o = bookObject.getString(Field.YEAR + "");
-                if (NumberUtils.isParsable(o))
-                    book.setYear(Integer.parseInt(o));
-                o = bookObject.getString("pages");
-                if (NumberUtils.isParsable(o))
-                    book.setPages(Integer.parseInt(o));
-                book.setLanguage(bookObject.getString("language"));
-                o = bookObject.getString("filesize");
-                if (NumberUtils.isParsable(o))
-                    book.setFilesize(Integer.parseInt(o));
-                book.setExtension(bookObject.getString("extension"));
-                book.setCover(getCoverUri(mirror, bookObject.getString("coverurl")));
                 list.add(book);
             }
             list.sort((b1, b2) ->
@@ -188,11 +147,64 @@ public class Libgen {
                 //never happens
                 return b1.getTitle().compareTo(b2.getTitle());
             });
-
             return list;
         } catch (IOException | JSONException | StringIndexOutOfBoundsException e) {
             throw new LibgenException("invalid response");
         }
+    }
+
+    private String search_request(List<String> ids) throws LibgenException, IOException {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        String fields = "Author,Title,MD5,Year,Pages,Language,Filesize,Extension,CoverURL";
+        RequestBody formBody = new FormBody.Builder()
+                .add("ids", encode_ids(ids))
+                .add("fields", fields)
+                .build();
+        Request req = new Request.Builder()
+                .url(mirror + "/json.php")
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .post(formBody)
+                .build();
+        Response resp = client.newCall(req).execute();
+        if (resp.body() == null)
+            throw new LibgenException("Invalid response");
+        String body = resp.body().string();
+        return body.substring(body.indexOf("["), body.lastIndexOf("]") + 1);
+    }
+
+    private String encode_ids(List<String> ids){
+        StringBuilder ids_comma = new StringBuilder();
+        for (String id : ids)
+            ids_comma.append(",").append(id);
+        ids_comma.replace(0, 1, "");
+        return ids_comma.toString();
+    }
+
+    private Book parseBook(JSONObject object){
+        Book book = new Book();
+        book.setAuthor(object.getString(Field.AUTHOR + ""));
+        book.setTitle(object.getString(Field.TITLE + ""));
+        book.setMD5(object.getString("md5"));
+        String o = object.getString(Field.YEAR + "");
+        if (NumberUtils.isParsable(o))
+            book.setYear(Integer.parseInt(o));
+        o = object.getString("pages");
+        if (NumberUtils.isParsable(o))
+            book.setPages(Integer.parseInt(o));
+        book.setLanguage(object.getString("language"));
+        o = object.getString("filesize");
+        if (NumberUtils.isParsable(o))
+            book.setFilesize(Integer.parseInt(o));
+        book.setExtension(object.getString("extension"));
+        book.setCover(getCoverUri(mirror, object.getString("coverurl")));
+        return book;
     }
 
     public List<Book> search(String stuff) throws LibgenException, NoBookFoundException {
@@ -224,7 +236,7 @@ public class Libgen {
         this.sorting_mode = "ASC";
     }
 
-    public void setDecendingSort() {
+    public void setDescendingSort() {
         this.sorting_mode = "DESC";
     }
 }
