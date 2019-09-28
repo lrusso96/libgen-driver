@@ -14,15 +14,15 @@ This application is written with JDK8 in mind. If you don't have a Java Developm
 
 ### Compile from sources
 
-- `git clone` or download this repo.
-- Open a terminal in the directory where the sources are stored.
-- Execute `mvn install -DskipTests` . The .jar file will be in the target folder.
+-   `git clone` or download this repo.
+-   Open a terminal in the directory where the sources are stored.
+-   Execute `mvn install -DskipTests` . The .jar file will be in the target folder.
 
 ### Add to your project
 
 You can easily add to your existing project through Maven or Gradle.
 
-**Maven**
+#### Maven
 
 1) Add the JitPack repository
 ```
@@ -42,7 +42,7 @@ You can easily add to your existing project through Maven or Gradle.
 </dependency>
 ```
 
-**Gradle**
+#### Gradle
 
 1) Add it in your root build.gradle at the end of repositories:
 ```
@@ -59,23 +59,25 @@ dependencies {
 }
 ```
 
-
 ### Examples
-```
-Libgen lib = new Libgen();
-
-//simple search
-lib.search("Divina commedia");
-
-//specific fields
-lib.searchAuthor("Dante Alighieri");
-
+```java
+public class Example{
+    public static void ex(){
+        Libgen lib = new Libgen();
+        
+        //simple search
+        lib.search("Divina commedia");
+        
+        //specific fields
+        lib.searchAuthor("Dante Alighieri");
+    }
+}
  ```
 
  ## Dependencies
 
-- [Square OkHttp](https://github.com/square/okhttp)
-- [JUnit](https://github.com/junit-team/junit4)
-- [Jsoup](https://github.com/jhy/jsoup)
-- [org/Json](https://github.com/stleary/JSON-java)
-- [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
+-   [Square OkHttp](https://github.com/square/okhttp)
+-   [JUnit](https://github.com/junit-team/junit4)
+-   [Jsoup](https://github.com/jhy/jsoup)
+-   [org/Json](https://github.com/stleary/JSON-java)
+-   [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
