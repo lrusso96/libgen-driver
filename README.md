@@ -9,9 +9,11 @@ Libgen driver is Java Libary to obtain infos from Libgen.
 ## Getting started
 
 ### Prerequisites
+
 This application is written with JDK8 in mind. If you don't have a Java Development Kit installed you can download it from [Oracle](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
 ### Compile from sources
+
 - `git clone` or download this repo.
 - Open a terminal in the directory where the sources are stored.
 - Execute `mvn install -DskipTests` . The .jar file will be in the target folder.
@@ -71,8 +73,9 @@ lib.searchAuthor("Dante Alighieri");
  ```
 
  ## Dependencies
- - [Square OkHttp](https://github.com/square/okhttp)
- - [JUnit](https://github.com/junit-team/junit4)
- - [Jsoup](https://github.com/jhy/jsoup)
- - [org/Json](https://github.com/stleary/JSON-java)
- - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
+
+- [Square OkHttp](https://github.com/square/okhttp)
+- [JUnit](https://github.com/junit-team/junit4)
+- [Jsoup](https://github.com/jhy/jsoup)
+- [org/Json](https://github.com/stleary/JSON-java)
+- [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)

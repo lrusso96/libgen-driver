@@ -1,6 +1,6 @@
 package lrusso96.libgen.driver;
 
-import lrusso96.libgen.driver.core.Book;
+import lrusso96.libgen.driver.core.model.Book;
 import lrusso96.libgen.driver.core.Field;
 import lrusso96.libgen.driver.core.Libgen;
 import lrusso96.libgen.driver.exceptions.LibgenException;

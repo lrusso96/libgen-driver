@@ -1,5 +1,6 @@
 package lrusso96.libgen.driver.core;
 
+import lrusso96.libgen.driver.core.model.Book;
 import lrusso96.libgen.driver.exceptions.LibgenException;
 import lrusso96.libgen.driver.exceptions.NoBookFoundException;
 import lrusso96.libgen.driver.exceptions.NoMirrorAvailableException;
@@ -58,20 +59,17 @@ public class Libgen {
         if (book.getDownload() != null)
             return;
         try {
-            URI uri = new URI("http://93.174.95.29/_ads/" + book.getMD5());
-            Document doc = Jsoup.connect(uri.toString()).get();
+            Document doc = Jsoup.connect("http://93.174.95.29/_ads/" + book.getMD5()).get();
             Elements anchors = doc.getElementsByTag("a");
             for (Element anchor : anchors) {
-                String text = anchor.text();
-                if (text.toLowerCase().equals("get")) {
+                if (anchor.text().equalsIgnoreCase("get")) {
                     book.setDownload(new URI(anchor.attr("href")));
                     return;
                 }
             }
         } catch (IOException e) {
             throw new LibgenException("invalid response");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+        } catch (URISyntaxException ignored) {
         }
         throw new NoMirrorAvailableException("no download uri available");
     }
@@ -124,7 +122,7 @@ public class Libgen {
         List<Book> list = new ArrayList<>();
 
         try {
-            String body = search_request(ids);
+            String body = searchRequest(ids);
             JSONArray response = new JSONArray(body);
             for (int i = 0; i < response.length(); i++) {
                 JSONObject bookObject = response.getJSONObject(i);
@@ -135,12 +133,12 @@ public class Libgen {
             list.sort((b1, b2) ->
             {
                 if (sorting_field.equals(Field.YEAR + "")) {
-                    if (sorting_mode.equals("ASC"))
+                    if ("ASC".equals(sorting_mode))
                         return Integer.compare(b1.getYear(), b2.getYear());
                     return Integer.compare(b2.getYear(), b1.getYear());
                 }
                 if (sorting_field.equals(Field.TITLE + "")) {
-                    if (sorting_mode.equals("ASC"))
+                    if ("ASC".equals(sorting_mode))
                         return b1.getTitle().compareTo(b2.getTitle());
                     return b2.getTitle().compareTo(b1.getTitle());
                 }
@@ -153,7 +151,7 @@ public class Libgen {
         }
     }
 
-    private String search_request(List<String> ids) throws LibgenException, IOException {
+    private String searchRequest(List<String> ids) throws LibgenException, IOException {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
@@ -163,7 +161,7 @@ public class Libgen {
 
         String fields = "Author,Title,MD5,Year,Pages,Language,Filesize,Extension,CoverURL";
         RequestBody formBody = new FormBody.Builder()
-                .add("ids", encode_ids(ids))
+                .add("ids", encodeIds(ids))
                 .add("fields", fields)
                 .build();
         Request req = new Request.Builder()
@@ -179,7 +177,7 @@ public class Libgen {
         return body.substring(body.indexOf("["), body.lastIndexOf("]") + 1);
     }
 
-    private String encode_ids(List<String> ids){
+    private String encodeIds(List<String> ids) {
         StringBuilder ids_comma = new StringBuilder();
         for (String id : ids)
             ids_comma.append(",").append(id);
@@ -187,7 +185,7 @@ public class Libgen {
         return ids_comma.toString();
     }
 
-    private Book parseBook(JSONObject object){
+    private Book parseBook(JSONObject object) {
         Book book = new Book();
         book.setAuthor(object.getString(Field.AUTHOR + ""));
         book.setTitle(object.getString(Field.TITLE + ""));

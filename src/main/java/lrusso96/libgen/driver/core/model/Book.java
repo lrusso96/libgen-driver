@@ -1,4 +1,4 @@
-package lrusso96.libgen.driver.core;
+package lrusso96.libgen.driver.core.model;
 
 import java.net.URI;
 
@@ -19,7 +19,7 @@ public class Book {
         return id;
     }
 
-    void setId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -27,7 +27,7 @@ public class Book {
         return author;
     }
 
-    void setAuthor(String author) {
+    public void setAuthor(String author) {
         this.author = author;
     }
 
@@ -35,7 +35,7 @@ public class Book {
         return title;
     }
 
-    void setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -43,7 +43,7 @@ public class Book {
         return MD5;
     }
 
-    void setMD5(String MD5) {
+    public void setMD5(String MD5) {
         this.MD5 = MD5;
     }
 
@@ -51,7 +51,7 @@ public class Book {
         return year;
     }
 
-    void setYear(int year) {
+    public void setYear(int year) {
         this.year = year;
     }
 
@@ -59,7 +59,7 @@ public class Book {
         return pages;
     }
 
-    void setPages(int pages) {
+    public void setPages(int pages) {
         this.pages = pages;
     }
 
@@ -67,7 +67,7 @@ public class Book {
         return language;
     }
 
-    void setLanguage(String language) {
+    public void setLanguage(String language) {
         this.language = language;
     }
 
@@ -79,7 +79,7 @@ public class Book {
         return String.format("%.1f %sB", filesize / Math.pow(unit, exp), pre);
     }
 
-    void setFilesize(int filesize) {
+    public void setFilesize(int filesize) {
         this.filesize = filesize;
     }
 
@@ -87,7 +87,7 @@ public class Book {
         return extension;
     }
 
-    void setExtension(String extension) {
+    public void setExtension(String extension) {
         this.extension = extension;
     }
 
@@ -95,7 +95,7 @@ public class Book {
         return cover;
     }
 
-    void setCover(URI cover_uri) {
+    public void setCover(URI cover_uri) {
         this.cover = cover_uri;
     }
 
