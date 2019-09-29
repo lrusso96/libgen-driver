@@ -74,16 +74,21 @@ public class Libgen {
             }
         } catch (IOException e) {
             throw new LibgenException(LibgenException.DEFAULT_MSG);
-        } catch (URISyntaxException ignored) {
+        } catch (URISyntaxException e) {
+            LOGGER.log( Level.WARNING, e.getMessage());
         }
         throw new NoMirrorAvailableException("no download uri available");
     }
 
-
     private List<String> getIds(String stuff, String column) throws LibgenException {
         int page = 1;
-        //reduce number of pages requested!
-        int results = maxResultsNumber <= 25 ? 25 : maxResultsNumber <= 50 ? 50 : 100;
+        //reduce number of pages requested
+        int results = 25;
+        if(maxResultsNumber > 25)
+            results = 50;
+        if(maxResultsNumber > 50)
+            results = 100;
+
         List<String> ids = getIds(stuff, column, page, results);
         while (ids.size() < maxResultsNumber) {
             page++;
