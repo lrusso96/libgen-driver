@@ -7,26 +7,29 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class MirrorHelper {
-    private static boolean isReachable(URI uri) {
-        try {
-            Jsoup.connect(uri.toString()).get();
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
+
+    private static final Logger LOGGER = Logger.getLogger( MirrorHelper.class.getName() );
+
+    private MirrorHelper() {
     }
 
     static URI getFirstReachable(List<URI> uris) throws NoMirrorAvailableException {
         for (URI uri : uris) {
-            if (isReachable(uri))
+            try {
+                Jsoup.connect(uri.toString()).get();
                 return uri;
+            } catch (IOException e) {
+                LOGGER.log( Level.WARNING, "{0} not reachable", uri);
+            }
         }
         throw new NoMirrorAvailableException("# uris tested: " + uris.size());
     }
 
-    static URI getCoverUri(URI uri, String cover) {
+    public static URI getCoverUri(URI uri, String cover) {
         if (cover.isEmpty())
             return null;
         try {
@@ -34,6 +37,7 @@ class MirrorHelper {
                 return new URI(cover);
             return new URI(uri.toString() + "/covers/" + cover);
         } catch (URISyntaxException e) {
+            LOGGER.log( Level.WARNING, "no cover available for {0}", cover);
             return null;
         }
     }

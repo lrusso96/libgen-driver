@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static lrusso96.libgen.driver.core.MirrorHelper.getCoverUri;
 
@@ -35,6 +37,7 @@ public class Libgen {
     private String sorting_field = DEFAULT_SORTING_FIELD.toString();
     private String sorting_mode = DEFAULT_SORTING_MODE;
 
+    private static final Logger LOGGER = Logger.getLogger( Libgen.class.getName());
 
     public Libgen() throws NoMirrorAvailableException {
         initMirrors();
@@ -49,9 +52,11 @@ public class Libgen {
     }
 
     private void initMirrors() {
+        String available = "http://93.174.95.27/";
         try {
-            mirrors.add(new URI("http://93.174.95.27/"));
-        } catch (URISyntaxException ignored) {
+            mirrors.add(new URI(available));
+        } catch (URISyntaxException e) {
+            LOGGER.log( Level.WARNING, "{0} not well formatted", available);
         }
     }
 
@@ -68,7 +73,7 @@ public class Libgen {
                 }
             }
         } catch (IOException e) {
-            throw new LibgenException("invalid response");
+            throw new LibgenException(LibgenException.DEFAULT_MSG);
         } catch (URISyntaxException ignored) {
         }
         throw new NoMirrorAvailableException("no download uri available");
@@ -99,10 +104,10 @@ public class Libgen {
             Document doc = Jsoup.connect(mirror + "/search.php")
                     .data("req", stuff)
                     .data("column", column)
-                    .data("res", results + "")
+                    .data("res", Integer.toString(results))
                     .data("sort", sorting_field)
                     .data("sortmode", sorting_mode)
-                    .data("page", page + "")
+                    .data("page", Integer.toString(page))
                     .get();
             Elements rows = doc.getElementsByTag("tr");
             for (Element row : rows) {
@@ -112,7 +117,7 @@ public class Libgen {
             }
             return list;
         } catch (IOException e) {
-            throw new LibgenException("invalid response");
+            throw new LibgenException(LibgenException.DEFAULT_MSG);
         }
     }
 
@@ -147,7 +152,7 @@ public class Libgen {
             });
             return list;
         } catch (IOException | JSONException | StringIndexOutOfBoundsException e) {
-            throw new LibgenException("invalid response");
+            throw new LibgenException(LibgenException.DEFAULT_MSG);
         }
     }
 
@@ -174,7 +179,7 @@ public class Libgen {
         if (resp.body() == null)
             throw new LibgenException("Invalid response");
         String body = resp.body().string();
-        return body.substring(body.indexOf("["), body.lastIndexOf("]") + 1);
+        return body.substring(body.indexOf('['), body.lastIndexOf(']') + 1);
     }
 
     private String encodeIds(List<String> ids) {

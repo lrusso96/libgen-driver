@@ -75,7 +75,7 @@ public class Book {
         int unit = 1000;
         if (filesize < unit) return filesize + " B";
         int exp = (int) (Math.log(filesize) / Math.log(unit));
-        String pre = ("kMGTPE").charAt(exp - 1) + "";
+        String pre = Character.toString(("kMGTPE").charAt(exp - 1));
         return String.format("%.1f %sB", filesize / Math.pow(unit, exp), pre);
     }
 
